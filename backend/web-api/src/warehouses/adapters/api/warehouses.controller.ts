@@ -9,15 +9,30 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 import { CreateWarehouseDto } from './dtos/create-warehouse.dto';
 import { WarehouseResponseDto } from './dtos/warehouse-response.dto';
 import { IWarehouseService } from '../../domain/ports/i-warehouses.service';
 
+@ApiTags('warehouses')
 @Controller('warehouses')
 export class WarehouseController {
   constructor(private readonly warehouseService: IWarehouseService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new warehouse' })
+  @ApiResponse({
+    status: 201,
+    description: 'Warehouse created successfully',
+    type: WarehouseResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   async create(
     @Body() createWarehouseDto: CreateWarehouseDto,
   ): Promise<WarehouseResponseDto> {
@@ -29,6 +44,14 @@ export class WarehouseController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a warehouse by ID' })
+  @ApiParam({ name: 'id', description: 'Warehouse ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Warehouse found',
+    type: WarehouseResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Warehouse not found' })
   async findOne(@Param('id') id: string): Promise<WarehouseResponseDto> {
     const warehouseModel = await this.warehouseService.findOne(id);
 
@@ -38,6 +61,12 @@ export class WarehouseController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all warehouses' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all warehouses',
+    type: [WarehouseResponseDto],
+  })
   async findAll(): Promise<WarehouseResponseDto[]> {
     const models = await this.warehouseService.findAll();
     return models.map((model) => {
@@ -48,6 +77,24 @@ export class WarehouseController {
   }
 
   @Put(':id/capacity')
+  @ApiOperation({ summary: 'Update warehouse capacity' })
+  @ApiParam({ name: 'id', description: 'Warehouse ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        capacity: { type: 'number', description: 'New capacity' },
+      },
+      required: ['capacity'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Capacity updated successfully',
+    type: WarehouseResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Warehouse not found' })
   async updateCapacity(
     @Param('id') id: string,
     @Body('capacity') newCapacity: number,
@@ -64,6 +111,10 @@ export class WarehouseController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a warehouse' })
+  @ApiParam({ name: 'id', description: 'Warehouse ID' })
+  @ApiResponse({ status: 204, description: 'Warehouse deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Warehouse not found' })
   async delete(@Param('id') id: string): Promise<void> {
     await this.warehouseService.delete(id);
   }

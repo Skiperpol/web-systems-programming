@@ -9,15 +9,30 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { ProductResponseDto } from './dtos/product-response.dto';
 import { IProductService } from '../../domain/ports/i-products.service';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: IProductService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new product' })
+  @ApiResponse({
+    status: 201,
+    description: 'Product created successfully',
+    type: ProductResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   async create(
     @Body() createProductDto: CreateProductDto,
   ): Promise<ProductResponseDto> {
@@ -28,6 +43,14 @@ export class ProductController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a product by ID' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product found',
+    type: ProductResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Product not found' })
   async findOne(@Param('id') id: string): Promise<ProductResponseDto> {
     const productModel = await this.productService.findOne(id);
 
@@ -37,6 +60,12 @@ export class ProductController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all products' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all products',
+    type: [ProductResponseDto],
+  })
   async findAll(): Promise<ProductResponseDto[]> {
     const models = await this.productService.findAll();
     return models.map((model) => {
@@ -47,6 +76,24 @@ export class ProductController {
   }
 
   @Put(':id/price')
+  @ApiOperation({ summary: 'Update product price' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        price: { type: 'number', description: 'New price' },
+      },
+      required: ['price'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Price updated successfully',
+    type: ProductResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
   async updatePrice(
     @Param('id') id: string,
     @Body('price') newPrice: number,
@@ -60,6 +107,10 @@ export class ProductController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a product' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiResponse({ status: 204, description: 'Product deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
   async delete(@Param('id') id: string): Promise<void> {
     await this.productService.delete(id);
   }
