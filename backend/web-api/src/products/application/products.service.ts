@@ -4,6 +4,7 @@ import { IProductRepository } from '../domain/ports/i-products.repository';
 import { IProductService } from '../domain/ports/i-products.service';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
+import { ProductCreateData } from '../domain/types/product-create-data.interface';
 
 @Injectable()
 export class ProductService implements IProductService {
@@ -12,7 +13,7 @@ export class ProductService implements IProductService {
     private readonly productRepository: IProductRepository,
   ) {}
 
-  async create(data: Omit<ProductModel, 'id'>): Promise<ProductModel> {
+  async create(data: ProductCreateData): Promise<ProductModel> {
     const newProduct = new ProductModel(
       uuid(),
       data.name,
