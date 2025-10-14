@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { WarehouseController } from './adapters/api/warehouses.controller';
 import { IWarehouseService } from './domain/ports/i-warehouses.service';
 import { WarehouseService } from './application/warehouses.service';
 import { IWarehouseRepository } from './domain/ports/i-warehouses.repository';
 import { WarehouseTypeOrmRepository } from './adapters/persistence/warehouse-typeorm.repository';
-import { PersistenceModule } from './adapters/persistence/persistence.module';
+import { WarehouseTypeOrmEntity } from './adapters/persistence/warehouse.entity';
 
 @Module({
-  imports: [PersistenceModule],
+  imports: [TypeOrmModule.forFeature([WarehouseTypeOrmEntity])],
   controllers: [WarehouseController],
   providers: [
     { provide: IWarehouseService, useClass: WarehouseService },
