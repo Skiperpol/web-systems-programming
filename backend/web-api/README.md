@@ -1,98 +1,263 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Web Systems Programming API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Opis projektu
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Jest to implementacja aplikacji WebAPI zgodna z architekturą Hexagonalną (Ports & Adapters), implementująca cztery podstawowe operacje na danych CRUD (Create, Read, Update, Delete) i wykorzystująca DTOs (Data Transfer Objects) do walidacji i transferu danych.
 
-## Description
+## Architektura Hexagonalna
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Aplikacja została zbudowana zgodnie z zasadami architektury Hexagonalnej, która zapewnia:
 
-## Project setup
+- **Separację warstw**: Domain, Application, Infrastructure
+- **Niezależność od frameworków**: Core business logic jest oddzielona od szczegółów implementacji
+- **Łatwość testowania**: Każda warstwa może być testowana niezależnie
+- **Elastyczność**: Łatwa wymiana adapterów bez wpływu na logikę biznesową
 
-```bash
-$ npm install
+### Struktura modułów
+
+Każdy moduł (Products, Warehouses, Discounts, Clients) składa się z:
+
+```
+src/
+├── domain/
+│   ├── model/           # Modele domenowe (business logic)
+│   ├── ports/           # Interfejsy (porty)
+│   └── types/           # Typy i interfejsy domenowe
+├── application/         # Serwisy aplikacyjne
+└── adapters/
+    ├── api/             # Kontrolery i DTOs
+    │   └── dtos/        # Data Transfer Objects
+    └── persistence/     # Repozytoria i encje TypeORM
 ```
 
-## Compile and run the project
+## CRUD Operations
 
-```bash
-# development
-$ npm run start
+Aplikacja implementuje standardowe operacje CRUD dla każdego modułu:
 
-# watch mode
-$ npm run start:dev
+### Products
+- `POST /api/products` - Utwórz nowy produkt
+- `GET /api/products` - Pobierz wszystkie produkty
+- `GET /api/products/:id` - Pobierz produkt po ID
+- `PUT /api/products/:id/price` - Aktualizuj cenę produktu
+- `DELETE /api/products/:id` - Usuń produkt
 
-# production mode
-$ npm run start:prod
+### Warehouses
+- `POST /api/warehouses` - Utwórz nowy magazyn
+- `GET /api/warehouses` - Pobierz wszystkie magazyny
+- `GET /api/warehouses/:id` - Pobierz magazyn po ID
+- `PUT /api/warehouses/:id/capacity` - Aktualizuj pojemność magazynu
+- `DELETE /api/warehouses/:id` - Usuń magazyn
+
+### Discounts
+- `POST /api/discounts` - Utwórz nową zniżkę
+- `GET /api/discounts` - Pobierz wszystkie zniżki
+- `GET /api/discounts/:id` - Pobierz zniżkę po ID
+- `PUT /api/discounts/:id/percentage` - Aktualizuj procent zniżki
+- `DELETE /api/discounts/:id` - Usuń zniżkę
+
+### Clients
+- `POST /api/clients` - Utwórz nowego klienta
+- `GET /api/clients` - Pobierz wszystkich klientów
+- `GET /api/clients/:id` - Pobierz klienta po ID
+- `PUT /api/clients/:id/email` - Aktualizuj email klienta
+- `DELETE /api/clients/:id` - Usuń klienta
+
+## DTOs (Data Transfer Objects)
+
+DTOs zapewniają walidację danych wejściowych i kontrolę struktury odpowiedzi:
+
+### Przykład CreateProductDto
+```typescript
+export class CreateProductDto {
+  @ApiProperty({
+    description: 'Product name',
+    example: 'Laptop Dell XPS 13',
+  })
+  @IsString()
+  readonly name: string;
+
+  @ApiProperty({
+    description: 'Product price in USD',
+    example: 1299.99,
+    minimum: 0.01,
+  })
+  @IsNumber()
+  @IsPositive()
+  readonly price: number;
+
+  @ApiProperty({
+    description: 'Product description',
+    example: 'High-performance laptop with 13-inch display',
+  })
+  @IsString()
+  readonly description: string;
+}
 ```
 
-## Run tests
+## Technologie
 
+- **NestJS** - Framework Node.js
+- **TypeORM** - ORM dla PostgreSQL
+- **PostgreSQL** - Baza danych
+- **class-validator** - Walidacja DTOs
+- **class-transformer** - Transformacja danych
+- **Swagger** - Dokumentacja API
+- **Jest** - Framework testowy
+
+## Instalacja i uruchomienie
+
+### Wymagania
+- Node.js (v18+)
+- PostgreSQL (v12+)
+- npm lub yarn
+
+### Konfiguracja bazy danych
+
+1. Zainstaluj PostgreSQL
+2. Utwórz bazę danych:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+createdb web_systems_db
 ```
 
-## Deployment
+### Konfiguracja środowiska
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+1. Skopiuj plik `.env.example` do `.env`:
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+cp .env.example .env
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. Edytuj plik `.env`:
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_DATABASE=web_systems_db
 
-## Resources
+# Application Configuration
+NODE_ENV=development
+PORT=3000
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Instalacja zależności
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm install
+```
 
-## Support
+### Uruchomienie aplikacji
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Tryb development
+npm run start:dev
 
-## Stay in touch
+# Tryb production
+npm run start:prod
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Aplikacja będzie dostępna pod adresem: `http://localhost:3000`
 
-## License
+## Swagger Documentation
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Dokumentacja API jest automatycznie generowana i dostępna pod adresem:
+**http://localhost:3000/api/docs**
+
+### Funkcje Swagger UI:
+- Interaktywna dokumentacja wszystkich endpointów
+- Możliwość testowania API bezpośrednio z przeglądarki
+- Szczegółowe opisy parametrów i odpowiedzi
+- Przykłady danych wejściowych i wyjściowych
+- Podział na kategorie (tags) dla każdego modułu
+
+### Przykład użycia:
+1. Otwórz http://localhost:3000/api/docs
+2. Rozwiń sekcję "products"
+3. Kliknij na endpoint "POST /api/products"
+4. Kliknij "Try it out"
+5. Wprowadź dane w formacie JSON
+6. Kliknij "Execute" aby przetestować endpoint
+
+## Testy
+
+### Struktura testów
+
+Projekt zawiera testy jednostkowe dla:
+- **Modeli domenowych** - testy logiki biznesowej
+- **Serwisów aplikacyjnych** - testy z mockami repozytoriów
+
+### Uruchamianie testów
+
+```bash
+# Uruchom wszystkie testy
+npm test
+
+# Uruchom testy w trybie watch
+npm run test:watch
+
+# Uruchom testy z pokryciem kodu
+npm run test:cov
+
+# Uruchom testy e2e
+npm run test:e2e
+```
+
+### Przykład testu jednostkowego
+
+```typescript
+describe('ProductModel', () => {
+  let productModel: ProductModel;
+
+  beforeEach(() => {
+    productModel = new ProductModel(
+      'test-id',
+      'Test Product',
+      99.99,
+      'Test Description'
+    );
+  });
+
+  it('should create a product with valid data', () => {
+    expect(productModel.id).toBe('test-id');
+    expect(productModel.name).toBe('Test Product');
+    expect(productModel.price).toBe(99.99);
+  });
+
+  it('should update price with valid value', () => {
+    productModel.updatePrice(149.99);
+    expect(productModel.price).toBe(149.99);
+  });
+});
+```
+
+## Konfiguracja środowiska (.env)
+
+### Zmienne środowiskowe
+
+| Zmienna | Opis | Domyślna wartość |
+|---------|------|------------------|
+| `DB_HOST` | Host bazy danych | `localhost` |
+| `DB_PORT` | Port bazy danych | `5432` |
+| `DB_USERNAME` | Nazwa użytkownika bazy danych | `postgres` |
+| `DB_PASSWORD` | Hasło bazy danych | `password` |
+| `DB_DATABASE` | Nazwa bazy danych | `web_systems_db` |
+| `NODE_ENV` | Środowisko aplikacji | `development` |
+| `PORT` | Port aplikacji | `3000` |
+
+## Skrypty NPM
+
+| Skrypt | Opis |
+|--------|------|
+| `npm run build` | Kompilacja aplikacji |
+| `npm run start` | Uruchomienie aplikacji |
+| `npm run start:dev` | Uruchomienie w trybie development |
+| `npm run start:prod` | Uruchomienie w trybie production |
+| `npm test` | Uruchomienie testów |
+| `npm run test:watch` | Uruchomienie testów w trybie watch |
+| `npm run test:cov` | Uruchomienie testów z pokryciem |
+| `npm run lint` | Sprawdzenie kodu ESLint |
+| `npm run format` | Formatowanie kodu Prettier |
+
+## Licencja
+
+Ten projekt jest licencjonowany na licencji MIT - zobacz plik [LICENSE](LICENSE) dla szczegółów.
