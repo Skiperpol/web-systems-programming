@@ -20,8 +20,9 @@ venv.bak/
 db.sqlite3
 media/
 staticfiles/
-static/
+static/*
 local_settings.py
+!static/css/*
 
 # ---- Environment / secrets ----
 .env.local
@@ -40,9 +41,6 @@ Thumbs.db
 
 # ---- Migrations cache ----
 */migrations/__pycache__/
-# Możesz zostawić tylko inicjalne pliki migracji, jeśli chcesz:
-# */migrations/*.py
-# ale zwykle ignoruje się tylko cache, a nie same migracje
 
 # ---- Byte-compiled / cache ----
 *.py[cod]
