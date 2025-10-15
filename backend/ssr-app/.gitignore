@@ -1,0 +1,87 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenv / venv
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ---- Django ----
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static/
+local_settings.py
+
+# ---- Environment / secrets ----
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+*.env
+secrets.json
+
+# ---- IDE / system ----
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---- Migrations cache ----
+*/migrations/__pycache__/
+# Możesz zostawić tylko inicjalne pliki migracji, jeśli chcesz:
+# */migrations/*.py
+# ale zwykle ignoruje się tylko cache, a nie same migracje
+
+# ---- Byte-compiled / cache ----
+*.py[cod]
+__pycache__/
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+*.cover
+.cache
+nosetests.xml
+coverage.xml
+
+# ---- Distribution / packaging ----
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# ---- Node / frontend (jeśli masz SSR, React, Vue itp.) ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnp.*
+.pnp.js
+
+# ---- Docker ----
+*.pid
+*.seed
+*.tar
+docker-compose.override.yml
+
+# ---- VSCode / JetBrains ----
+.vscode/
+.idea/
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
