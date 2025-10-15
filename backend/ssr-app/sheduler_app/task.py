@@ -15,28 +15,21 @@ def sync_discounts_from_api():
     Fetches discount data from web-api and updates the database.
     Runs daily at 3:00 AM.
     """
-    logger.info("Starting sync_discounts_from_api task...")
     
     api_base_url = getattr(settings, 'EXTERNAL_API_BASE_URL')
     api_timeout = getattr(settings, 'EXTERNAL_API_TIMEOUT')
     discounts_endpoint = f"{api_base_url}/discounts"
     
     try:
-        logger.info(f"Fetching discounts from: {discounts_endpoint}")
         response = requests.get(discounts_endpoint, timeout=api_timeout)
         response.raise_for_status()
         
         api_data = response.json()
-        logger.info(f"Successfully fetched {len(api_data)} discounts from API")
         
     except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to fetch data from API: {str(e)}")
-        logger.warning("Using fallback mock data due to API unavailability")
         api_data = _get_fallback_mock_data()
     
     except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse API response as JSON: {str(e)}")
-        logger.warning("Using fallback mock data due to JSON parsing error")
         api_data = _get_fallback_mock_data()
     
     updated_count = 0
@@ -65,17 +58,13 @@ def sync_discounts_from_api():
             
             if created:
                 created_count += 1
-                logger.info(f"Created new discount: {discount.name} (ID: {external_id})")
             else:
                 updated_count += 1
-                logger.info(f"Updated discount: {discount.name} (ID: {external_id})")
                 
         except (ValueError, KeyError, TypeError) as e:
-            logger.error(f"Error processing discount item {api_item.get('id', 'unknown')}: {str(e)}")
             continue
     
     result_message = f"Sync completed. Created: {created_count}, Updated: {updated_count}"
-    logger.info(result_message)
     return result_message
 
 
@@ -120,7 +109,6 @@ def cleanup_expired_discounts():
     Removes all discounts that have passed their valid_to date.
     Runs daily at midnight (00:00).
     """
-    logger.info("Starting cleanup_expired_discounts task...")
     
     now = timezone.now()
     
@@ -133,9 +121,7 @@ def cleanup_expired_discounts():
         deleted_count, _ = expired_discounts.delete()
         
         result_message = f"Cleanup completed. Deleted {deleted_count} expired discounts: {', '.join(expired_names)}"
-        logger.info(result_message)
         return result_message
     else:
         result_message = "Cleanup completed. No expired discounts found."
-        logger.info(result_message)
         return result_message
