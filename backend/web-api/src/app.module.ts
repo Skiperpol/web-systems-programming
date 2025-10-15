@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 import { ProductsModule } from './products/products.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { DiscountsModule } from './discounts/discounts.module';
@@ -11,8 +12,17 @@ import { databaseConfig } from './database/database.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: [
+        join(__dirname, '../../../../.env.local'),
+        join(__dirname, '../../../../.env.development'),
+        join(__dirname, '../../../../.env'),
+        join(__dirname, '../../../../env.example'),
+      ],
     }),
-    TypeOrmModule.forRoot(databaseConfig),
+    TypeOrmModule.forRootAsync({
+      useFactory: databaseConfig,
+      inject: [ConfigService],
+    }),
     ProductsModule,
     WarehousesModule,
     DiscountsModule,
