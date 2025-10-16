@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DiscountModel } from '../domain/model/discounts.model';
 import { IDiscountRepository } from '../domain/ports/i-discounts.repository';
-import { IDiscountService } from '../domain/ports/i-discounts.service';
+import { IDiscountService, DiscountUpdateData } from '../domain/ports/i-discounts.service';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
 import { DiscountCreateData } from '../domain/types/discount-create-data.interface';
@@ -36,6 +36,28 @@ export class DiscountService implements IDiscountService {
 
   async findAll(): Promise<DiscountModel[]> {
     return this.discountRepository.findAll();
+  }
+
+  async update(id: string, data: DiscountUpdateData): Promise<DiscountModel> {
+    const discount = await this.findOne(id);
+
+    if (data.name !== undefined) {
+      discount.updateName(data.name);
+    }
+    if (data.percentage !== undefined) {
+      discount.updatePercentage(data.percentage);
+    }
+    if (data.description !== undefined) {
+      discount.updateDescription(data.description);
+    }
+    if (data.validFrom !== undefined) {
+      discount.updateValidFrom(data.validFrom);
+    }
+    if (data.validTo !== undefined) {
+      discount.updateValidTo(data.validTo);
+    }
+
+    return this.discountRepository.save(discount);
   }
 
   async updatePercentage(

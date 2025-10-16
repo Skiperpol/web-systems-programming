@@ -17,6 +17,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { CreateDiscountDto } from './dtos/create-discount.dto';
+import { UpdateDiscountDto } from './dtos/update-discount.dto';
 import { DiscountResponseDto } from './dtos/discount-response.dto';
 import { IDiscountService } from '../../domain/ports/i-discounts.service';
 
@@ -79,6 +80,34 @@ export class DiscountController {
       Object.assign(dto, model);
       return dto;
     });
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a discount' })
+  @ApiParam({ name: 'id', description: 'Discount ID' })
+  @ApiBody({ type: UpdateDiscountDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Discount updated successfully',
+    type: DiscountResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Discount not found' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateDiscountDto: UpdateDiscountDto,
+  ): Promise<DiscountResponseDto> {
+    const updateData = {
+      ...updateDiscountDto,
+      validFrom: updateDiscountDto.validFrom ? new Date(updateDiscountDto.validFrom) : undefined,
+      validTo: updateDiscountDto.validTo ? new Date(updateDiscountDto.validTo) : undefined,
+    };
+
+    const updatedModel = await this.discountService.update(id, updateData);
+
+    const responseDto = new DiscountResponseDto();
+    Object.assign(responseDto, updatedModel);
+    return responseDto;
   }
 
   @Put(':id/percentage')
