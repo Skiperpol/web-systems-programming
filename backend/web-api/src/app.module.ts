@@ -6,6 +6,7 @@ import { ProductsModule } from './products/products.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { DiscountsModule } from './discounts/discounts.module';
 import { ClientsModule } from './clients/clients.module';
+import { SeederModule } from './seeder/seeder.module';
 import { databaseConfig } from './database/database.config';
 
 @Module({
@@ -27,6 +28,7 @@ import { databaseConfig } from './database/database.config';
     WarehousesModule,
     DiscountsModule,
     ClientsModule,
+    SeederModule,
   ],
   controllers: [],
   providers: [],
