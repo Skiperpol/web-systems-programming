@@ -11,6 +11,20 @@ export class WarehouseModel {
     this.capacity = capacity;
   }
 
+  public updateName(newName: string): void {
+    if (!newName || newName.trim().length === 0) {
+      throw new Error('Warehouse name cannot be empty.');
+    }
+    this.name = newName.trim();
+  }
+
+  public updateAddress(newAddress: string): void {
+    if (!newAddress || newAddress.trim().length === 0) {
+      throw new Error('Warehouse address cannot be empty.');
+    }
+    this.address = newAddress.trim();
+  }
+
   public updateCapacity(newCapacity: number): void {
     if (newCapacity <= 0) {
       throw new Error('Capacity must be positive.');

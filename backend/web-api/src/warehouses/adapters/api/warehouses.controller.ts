@@ -17,6 +17,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { CreateWarehouseDto } from './dtos/create-warehouse.dto';
+import { UpdateWarehouseDto } from './dtos/update-warehouse.dto';
 import { WarehouseResponseDto } from './dtos/warehouse-response.dto';
 import { IWarehouseService } from '../../domain/ports/i-warehouses.service';
 
@@ -74,6 +75,28 @@ export class WarehouseController {
       Object.assign(dto, model);
       return dto;
     });
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a warehouse' })
+  @ApiParam({ name: 'id', description: 'Warehouse ID' })
+  @ApiBody({ type: UpdateWarehouseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Warehouse updated successfully',
+    type: WarehouseResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Warehouse not found' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateWarehouseDto: UpdateWarehouseDto,
+  ): Promise<WarehouseResponseDto> {
+    const updatedModel = await this.warehouseService.update(id, updateWarehouseDto);
+
+    const responseDto = new WarehouseResponseDto();
+    Object.assign(responseDto, updatedModel);
+    return responseDto;
   }
 
   @Put(':id/capacity')
