@@ -96,6 +96,38 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
+  
+  /* Dialog styles */
+  [data-radix-popper-content-wrapper] {
+    z-index: 50;
+  }
+  
+  /* Ensure dialog content has solid background */
+  [data-radix-dialog-content] {
+    background-color: white !important;
+  }
+  
+  .dark [data-radix-dialog-content] {
+    background-color: #111827 !important;
+  }
+  
+  /* Dropdown menu styles */
+  [data-radix-dropdown-menu-content] {
+    background-color: white !important;
+  }
+  
+  .dark [data-radix-dropdown-menu-content] {
+    background-color: #111827 !important;
+  }
+  
+  /* Dropdown menu items */
+  [data-radix-dropdown-menu-item] {
+    color: #111827 !important;
+  }
+  
+  .dark [data-radix-dropdown-menu-item] {
+    color: #f9fafb !important;
+  }
 }
 
 @theme inline {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { AppSidebar } from '../AppSidebar';
-import { Header } from '../Header';
+import { AppSidebar } from '../app-sidebar';
+import { Header } from '../header';
 
 type RouteConfig = [string, React.ReactNode];
 

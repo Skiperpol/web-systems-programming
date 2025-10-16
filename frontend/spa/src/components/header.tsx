@@ -1,12 +1,10 @@
 import React from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   const location = useLocation();
   
-  // Mapowanie ścieżek do nazw stron
   const pageNames: Record<string, string> = {
     '/': 'Dashboard',
     '/clients': 'Klienci',
