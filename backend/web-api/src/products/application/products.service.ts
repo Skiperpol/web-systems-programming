@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductModel } from '../domain/model/products.model';
 import { IProductRepository } from '../domain/ports/i-products.repository';
-import { IProductService } from '../domain/ports/i-products.service';
+import { IProductService, ProductUpdateData } from '../domain/ports/i-products.service';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
 import { ProductCreateData } from '../domain/types/product-create-data.interface';
@@ -34,6 +34,22 @@ export class ProductService implements IProductService {
 
   async findAll(): Promise<ProductModel[]> {
     return this.productRepository.findAll();
+  }
+
+  async update(id: string, data: ProductUpdateData): Promise<ProductModel> {
+    const product = await this.findOne(id);
+
+    if (data.name !== undefined) {
+      product.updateName(data.name);
+    }
+    if (data.price !== undefined) {
+      product.updatePrice(data.price);
+    }
+    if (data.description !== undefined) {
+      product.updateDescription(data.description);
+    }
+
+    return this.productRepository.save(product);
   }
 
   async updatePrice(id: string, newPrice: number): Promise<ProductModel> {

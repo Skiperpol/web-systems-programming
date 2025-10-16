@@ -17,6 +17,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { CreateProductDto } from './dtos/create-product.dto';
+import { UpdateProductDto } from './dtos/update-product.dto';
 import { ProductResponseDto } from './dtos/product-response.dto';
 import { IProductService } from '../../domain/ports/i-products.service';
 
@@ -73,6 +74,28 @@ export class ProductController {
       Object.assign(dto, model);
       return dto;
     });
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a product' })
+  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiBody({ type: UpdateProductDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Product updated successfully',
+    type: ProductResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<ProductResponseDto> {
+    const updatedModel = await this.productService.update(id, updateProductDto);
+
+    const responseDto = new ProductResponseDto();
+    Object.assign(responseDto, updatedModel);
+    return responseDto;
   }
 
   @Put(':id/price')

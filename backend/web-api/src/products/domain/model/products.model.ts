@@ -11,10 +11,24 @@ export class ProductModel {
     this.description = description;
   }
 
+  public updateName(newName: string): void {
+    if (!newName || newName.trim().length === 0) {
+      throw new Error('Product name cannot be empty.');
+    }
+    this.name = newName.trim();
+  }
+
   public updatePrice(newPrice: number): void {
     if (newPrice <= 0) {
       throw new Error('Price must be positive.');
     }
     this.price = newPrice;
+  }
+
+  public updateDescription(newDescription: string): void {
+    if (!newDescription || newDescription.trim().length === 0) {
+      throw new Error('Product description cannot be empty.');
+    }
+    this.description = newDescription.trim();
   }
 }
