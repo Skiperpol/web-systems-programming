@@ -21,7 +21,11 @@ if (!BASE_URL) {
 }
 
 export function apiRunner<T>(url: string, options?: RequestOptions): Observable<T> {
-  const fullUrl = `${BASE_URL}${url}`;
+  // Check if url is already a full URL (contains http:// or https://)
+  const fullUrl = url.startsWith('http://') || url.startsWith('https://') 
+    ? url 
+    : `${BASE_URL}${url}`;
+    
   return from(
     fetch(fullUrl, options).then(async (response) => {
       if (!response.ok) {

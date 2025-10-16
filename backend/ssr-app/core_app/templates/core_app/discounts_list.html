@@ -1,60 +1,41 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Discounts - Django SSR App</title>
-    <link rel="stylesheet" href="{% static 'css/discounts.css' %}">
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Active Discounts</h1>
-            <p>Discover amazing deals and special offers</p>
+<div class="discounts-preview">
+    <div class="header">
+        <h2>Active Discounts</h2>
+        <p>Discover amazing deals and special offers</p>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-number">{{ total_discounts }}</span> Active Discounts
         </div>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number">{{ total_discounts }}</span> Active Discounts
-            </div>
-            <div class="stat-item">
-                Last Updated: {{ current_time|date:"M d, Y H:i" }}
-            </div>
-        </div>
-
-        {% if active_discounts %}
-            <div class="discounts-grid">
-                {% for discount in active_discounts %}
-                <div class="discount-card">
-                    <h3 class="discount-name">{{ discount.name }}</h3>
-                    <div class="discount-percentage">{{ discount.percentage }}% OFF</div>
-                    
-                    {% if discount.description %}
-                        <p class="discount-description">{{ discount.description }}</p>
-                    {% endif %}
-                    
-                    <div class="discount-validity">
-                        <div class="validity-label">Valid Until</div>
-                        <div class="validity-date">{{ discount.valid_to|date:"F d, Y \a\t H:i" }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="no-discounts">
-                <h2>No Active Discounts</h2>
-                <p>There are currently no active discounts available. Check back later for new offers!</p>
-            </div>
-        {% endif %}
-
-        <div class="footer">
-            <p>Powered by Django SSR Application</p>
-            <p class="refresh-info">
-                Discounts are automatically synchronized and updated via Celery Beat scheduler.
-                Next sync scheduled for 3:00 AM daily.
-            </p>
+        <div class="stat-item">
+            Last Updated: {{ current_time|date:"M d, Y H:i" }}
         </div>
     </div>
-</body>
-</html>
+
+    {% if active_discounts %}
+        <div class="discounts-grid">
+            {% for discount in active_discounts %}
+            <div class="discount-card">
+                <h3 class="discount-name">{{ discount.name }}</h3>
+                <div class="discount-percentage">{{ discount.percentage }}% OFF</div>
+                
+                {% if discount.description %}
+                    <p class="discount-description">{{ discount.description }}</p>
+                {% endif %}
+                
+                <div class="discount-validity">
+                    <div class="validity-label">Valid Until</div>
+                    <div class="validity-date">{{ discount.valid_to|date:"F d, Y \a\t H:i" }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-discounts">
+            <h3>No Active Discounts</h3>
+            <p>There are currently no active discounts available. Check back later for new offers!</p>
+        </div>
+    {% endif %}
+</div>
