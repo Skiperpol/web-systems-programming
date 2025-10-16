@@ -17,6 +17,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { CreateClientDto } from './dtos/create-client.dto';
+import { UpdateClientDto } from './dtos/update-client.dto';
 import { ClientResponseDto } from './dtos/client-response.dto';
 import { IClientService } from '../../domain/ports/i-clients.service';
 
@@ -75,6 +76,28 @@ export class ClientController {
     });
   }
 
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a client' })
+  @ApiParam({ name: 'id', description: 'Client ID' })
+  @ApiBody({ type: UpdateClientDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Client updated successfully',
+    type: ClientResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Client not found' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateClientDto: UpdateClientDto,
+  ): Promise<ClientResponseDto> {
+    const updatedModel = await this.clientService.update(id, updateClientDto);
+
+    const responseDto = new ClientResponseDto();
+    Object.assign(responseDto, updatedModel);
+    return responseDto;
+  }
+
   @Put(':id/email')
   @ApiOperation({ summary: 'Update client email' })
   @ApiParam({ name: 'id', description: 'Client ID' })
@@ -82,7 +105,11 @@ export class ClientController {
     schema: {
       type: 'object',
       properties: {
-        email: { type: 'string', format: 'email', description: 'New email address' },
+        email: {
+          type: 'string',
+          format: 'email',
+          description: 'New email address',
+        },
       },
       required: ['email'],
     },

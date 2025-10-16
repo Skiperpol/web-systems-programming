@@ -39,7 +39,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {
     customSiteTitle: 'Web Systems API Documentation',
-    customfavIcon: 'https://nestjs.com/img/logo-small.svg', // To wystarczy
+    customfavIcon: 'https://nestjs.com/img/logo-small.svg',
   });
 
   const port = configService.get<number>('PORT') ?? 3000;

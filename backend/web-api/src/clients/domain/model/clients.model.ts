@@ -19,6 +19,20 @@ export class ClientModel {
     this.phone = phone;
   }
 
+  public updateFirstName(newFirstName: string): void {
+    if (!newFirstName || newFirstName.trim().length === 0) {
+      throw new Error('First name cannot be empty.');
+    }
+    this.firstName = newFirstName.trim();
+  }
+
+  public updateLastName(newLastName: string): void {
+    if (!newLastName || newLastName.trim().length === 0) {
+      throw new Error('Last name cannot be empty.');
+    }
+    this.lastName = newLastName.trim();
+  }
+
   public updateEmail(newEmail: string): void {
     if (
       !newEmail.includes('@') ||
@@ -28,6 +42,13 @@ export class ClientModel {
       throw new Error('Email must contain @ symbol.');
     }
     this.email = newEmail;
+  }
+
+  public updatePhone(newPhone: string): void {
+    if (!newPhone || newPhone.trim().length === 0) {
+      throw new Error('Phone number cannot be empty.');
+    }
+    this.phone = newPhone.trim();
   }
 
   public getFullName(): string {

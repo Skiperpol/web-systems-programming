@@ -126,6 +126,11 @@ export const ClientsPage: React.FC = () => {
       label: 'Dodaj klienta',
       onClick: handleAddClient,
     },
+    pagination: {
+      pageSize: 5,
+      showSizeChanger: true,
+      pageSizeOptions: [5, 10, 20, 50],
+    },
   };
 
   if (isLoading) {

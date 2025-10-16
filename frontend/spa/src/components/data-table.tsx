@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import Button from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -23,6 +23,15 @@ import {
   Trash2, 
   Eye 
 } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
 
 export interface TableColumn<T> {
   key: keyof T;
@@ -45,6 +54,11 @@ export interface TableConfig<T> {
   addButton?: {
     label: string;
     onClick: () => void;
+  };
+  pagination?: {
+    pageSize?: number;
+    showSizeChanger?: boolean;
+    pageSizeOptions?: number[];
   };
 }
 
@@ -71,10 +85,29 @@ export function DataTable<T extends { id: string | number }>({
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [filteredData, setFilteredData] = useState<T[]>(data);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(config.pagination?.pageSize || 10);
 
   useEffect(() => {
     setFilteredData(data);
+    setCurrentPage(1); // Reset to first page when data changes
   }, [data]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
+  // Pagination handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to first page when page size changes
+  };
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -169,8 +202,8 @@ export function DataTable<T extends { id: string | number }>({
               )}
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {filteredData.map((row) => (
+            <TableBody>
+              {paginatedData.map((row) => (
               <TableRow key={row.id}>
                 {config.columns.map((column) => (
                   <TableCell key={String(column.key)}>
@@ -228,10 +261,81 @@ export function DataTable<T extends { id: string | number }>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>
-          Znaleziono {filteredData.length} z {data.length} rekordów
-        </span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span>
+            Pokazano {startIndex + 1}-{Math.min(endIndex, filteredData.length)} z {filteredData.length} rekordów
+          </span>
+          
+          {config.pagination?.showSizeChanger && (
+            <div className="flex items-center gap-2">
+              <span>Pokaż:</span>
+              <select
+                value={pageSize}
+                onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                className="rounded border border-gray-300 px-2 py-1 text-sm"
+              >
+                {(config.pagination?.pageSizeOptions || [5, 10, 20, 50]).map(size => (
+                  <option key={size} value={size}>{size}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
+        {totalPages > 1 && (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  size="default"
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                />
+              </PaginationItem>
+
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <PaginationItem key={pageNum}>
+                    <PaginationLink
+                      size="icon"
+                      onClick={() => handlePageChange(pageNum)}
+                      isActive={currentPage === pageNum}
+                      className="cursor-pointer"
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  size="default"
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </div>
     </div>
   );

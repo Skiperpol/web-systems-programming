@@ -49,11 +49,7 @@ describe('ClientService', () => {
 
       repository.save.mockResolvedValue(mockClient);
 
-      const result = await service.create({
-        ...clientData,
-        updateEmail: jest.fn(),
-        getFullName: jest.fn(),
-      });
+      const result = await service.create(clientData as any);
 
       expect(result).toEqual(mockClient);
       expect(repository.save).toHaveBeenCalledWith(
@@ -85,6 +81,213 @@ describe('ClientService', () => {
       );
       await expect(service.findOne('non-existent-id')).rejects.toThrow(
         'Client with ID non-existent-id not found',
+      );
+    });
+  });
+
+  describe('update', () => {
+    it('should update all client fields', async () => {
+      const updateData = {
+        firstName: 'Jane',
+        lastName: 'Smith',
+        email: 'jane.smith@example.com',
+        phone: '+9876543210',
+      };
+
+      const updatedClient = new ClientModel(
+        'test-id',
+        'Jane',
+        'Smith',
+        'jane.smith@example.com',
+        '+9876543210',
+      );
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(updatedClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(updatedClient);
+      expect(repository.findById).toHaveBeenCalledWith('test-id');
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          firstName: 'Jane',
+          lastName: 'Smith',
+          email: 'jane.smith@example.com',
+          phone: '+9876543210',
+        }),
+      );
+    });
+
+    it('should update only firstName', async () => {
+      const updateData = { firstName: 'Jane' };
+      const updatedClient = new ClientModel(
+        'test-id',
+        'Jane',
+        'Doe',
+        'john.doe@example.com',
+        '+1234567890',
+      );
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(updatedClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(updatedClient);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          firstName: 'Jane',
+        }),
+      );
+    });
+
+    it('should update only lastName', async () => {
+      const updateData = { lastName: 'Smith' };
+      const updatedClient = new ClientModel(
+        'test-id',
+        'John',
+        'Smith',
+        'john.doe@example.com',
+        '+1234567890',
+      );
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(updatedClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(updatedClient);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          lastName: 'Smith',
+        }),
+      );
+    });
+
+    it('should update only email', async () => {
+      const updateData = { email: 'new.email@example.com' };
+      const updatedClient = new ClientModel(
+        'test-id',
+        'John',
+        'Doe',
+        'new.email@example.com',
+        '+1234567890',
+      );
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(updatedClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(updatedClient);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'new.email@example.com',
+        }),
+      );
+    });
+
+    it('should update only phone', async () => {
+      const updateData = { phone: '+9876543210' };
+      const updatedClient = new ClientModel(
+        'test-id',
+        'John',
+        'Doe',
+        'john.doe@example.com',
+        '+9876543210',
+      );
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(updatedClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(updatedClient);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          phone: '+9876543210',
+        }),
+      );
+    });
+
+    it('should update multiple fields', async () => {
+      const updateData = {
+        firstName: 'Jane',
+        email: 'jane.doe@example.com',
+      };
+      const updatedClient = new ClientModel(
+        'test-id',
+        'Jane',
+        'Doe',
+        'jane.doe@example.com',
+        '+1234567890',
+      );
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(updatedClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(updatedClient);
+      expect(repository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          firstName: 'Jane',
+          email: 'jane.doe@example.com',
+        }),
+      );
+    });
+
+    it('should handle empty update data', async () => {
+      const updateData = {};
+
+      repository.findById.mockResolvedValue(mockClient);
+      repository.save.mockResolvedValue(mockClient);
+
+      const result = await service.update('test-id', updateData);
+
+      expect(result).toEqual(mockClient);
+      expect(repository.findById).toHaveBeenCalledWith('test-id');
+      expect(repository.save).toHaveBeenCalledWith(mockClient);
+    });
+
+    it('should throw NotFoundException when client not found', async () => {
+      repository.findById.mockResolvedValue(null);
+
+      await expect(
+        service.update('non-existent-id', { firstName: 'Jane' }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should handle firstName validation errors', async () => {
+      repository.findById.mockResolvedValue(mockClient);
+
+      await expect(
+        service.update('test-id', { firstName: '' }),
+      ).rejects.toThrow('First name cannot be empty.');
+    });
+
+    it('should handle lastName validation errors', async () => {
+      repository.findById.mockResolvedValue(mockClient);
+
+      await expect(service.update('test-id', { lastName: '' })).rejects.toThrow(
+        'Last name cannot be empty.',
+      );
+    });
+
+    it('should handle email validation errors', async () => {
+      repository.findById.mockResolvedValue(mockClient);
+
+      await expect(
+        service.update('test-id', { email: 'invalid-email' }),
+      ).rejects.toThrow('Email must contain @ symbol.');
+    });
+
+    it('should handle phone validation errors', async () => {
+      repository.findById.mockResolvedValue(mockClient);
+
+      await expect(service.update('test-id', { phone: '' })).rejects.toThrow(
+        'Phone number cannot be empty.',
       );
     });
   });
