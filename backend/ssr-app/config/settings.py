@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize django-environ
 env = environ.Env(
-    DEBUG=(bool, False),
+    DEBUG=(bool, True),
     EXTERNAL_API_BASE_URL=(str, 'http://localhost:3000/api'),
     EXTERNAL_API_TIMEOUT=(int, 30),
     CELERY_BROKER_URL=(str, 'redis://localhost:6379/0'),
@@ -134,7 +134,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = [
-    BASE_DIR / 'core_app' / 'static',
+    BASE_DIR / 'core_app' / 'static' / 'css',
 ]
 
 # Collect static files for production
