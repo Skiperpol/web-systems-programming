@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { apiRunner } from '@/lib/utils';
+import { CSSLoader } from '@/components/CSSLoader';
 
 interface DiscountPreview {
   name: string;
@@ -69,65 +69,53 @@ export const DiscountsPreview: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Active Discounts</h2>
-          <p className="text-muted-foreground">Discover amazing deals and special offers</p>
+    <>
+      <CSSLoader 
+        cssUrl="http://localhost:8000/discounts-scoped.css"
+        onLoad={() => console.log('Scoped CSS loaded successfully')}
+        onError={(error) => console.error('Failed to load scoped CSS:', error)}
+      />
+      
+      <div className="discounts-preview">
+        <div className="header">
+          <h2>Active Discounts</h2>
+          <p>Discover amazing deals and special offers</p>
         </div>
-      </div>
+        
+        <div className="stats">
+          <div className="stat-item">
+            <span className="stat-number">{data.total_discounts}</span> Active Discounts
+          </div>
+          <div className="stat-item">
+            Last Updated: {data.current_time}
+          </div>
+        </div>
 
-      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-primary">{data.total_discounts}</span>
-          <span>Active Discounts</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>Last Updated:</span>
-          <span>{data.current_time}</span>
-        </div>
-      </div>
-
-      {data.active_discounts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {data.active_discounts.map((discount, index) => (
-            <Card key={index} className="relative overflow-hidden">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg">{discount.name}</CardTitle>
-                  <Badge variant="destructive" className="ml-2">
-                    {discount.percentage}% OFF
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
+        {data.active_discounts.length > 0 ? (
+          <div className="discounts-grid">
+            {data.active_discounts.map((discount, index) => (
+              <div key={index} className="discount-card">
+                <h3 className="discount-name">{discount.name}</h3>
+                <div className="discount-percentage">{discount.percentage}% OFF</div>
+                
                 {discount.description && (
-                  <CardDescription className="mb-4">
-                    {discount.description}
-                  </CardDescription>
+                  <p className="discount-description">{discount.description}</p>
                 )}
-                <div className="space-y-2">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Valid Until
-                  </div>
-                  <div className="text-sm">
-                    {discount.validTo}
-                  </div>
+                
+                <div className="discount-validity">
+                  <div className="validity-label">Valid</div>
+                  <div className="validity-date">{discount.validTo}</div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center h-32 text-center">
-            <h3 className="text-lg font-semibold mb-2">No Active Discounts</h3>
-            <p className="text-muted-foreground">
-              There are currently no active discounts available. Check back later for new offers!
-            </p>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-discounts">
+            <h3>No Active Discounts</h3>
+            <p>There are currently no active discounts available. Check back later for new offers!</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 };

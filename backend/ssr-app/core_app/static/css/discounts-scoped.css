@@ -1,0 +1,134 @@
+/* Scoped CSS for React component - only affects .discounts-preview */
+.discounts-preview {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.discounts-preview .header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.discounts-preview .header h1,
+.discounts-preview .header h2 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+}
+
+.discounts-preview .header p {
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+    font-size: 1.1em;
+}
+
+.discounts-preview .stats {
+    padding: 20px 30px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.discounts-preview .stats .stat-item {
+    display: inline-block;
+    margin-right: 30px;
+    color: #6c757d;
+}
+
+.discounts-preview .stats .stat-number {
+    font-weight: bold;
+    color: #495057;
+    font-size: 1.2em;
+}
+
+.discounts-preview .discounts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    padding: 30px;
+}
+
+.discounts-preview .discount-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 25px;
+    background-color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.discounts-preview .discount-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.discounts-preview .discount-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+}
+
+.discounts-preview .discount-name {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 10px 0;
+}
+
+.discounts-preview .discount-percentage {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #e74c3c;
+    margin: 10px 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.discounts-preview .discount-description {
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.discounts-preview .discount-validity {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid #28a745;
+}
+
+.discounts-preview .validity-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.discounts-preview .validity-date {
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.discounts-preview .no-discounts {
+    text-align: center;
+    padding: 60px 30px;
+    color: #6c757d;
+}
+
+.discounts-preview .no-discounts h2,
+.discounts-preview .no-discounts h3 {
+    color: #495057;
+    margin-bottom: 15px;
+}
