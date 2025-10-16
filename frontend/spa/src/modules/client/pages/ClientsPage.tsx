@@ -1,72 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { DataTable, type TableColumn, type TableConfig } from '@/components/ui/data-table';
-import { ClientForm, type Client } from '@/modules/client/forms/ClientForm';
+import React from 'react';
+import { DataTable, type TableColumn, type TableConfig } from '@/components/data-table';
+import { useApi } from '@/hooks/useApi';
+import { ClientForm } from '@/modules/client/forms/ClientForm';
 import { DeleteConfirmDialog } from '@/modules/client/forms/DeleteConfirmDialog';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { 
+  getClients, 
+  createClient, 
+  updateClient, 
+  deleteClient, 
+  type Client 
+} from '@/modules/client/api/clientApi';
 
 export const ClientsPage: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-  const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-  const [error, setError] = useState<string | null>(null);
+  const [isFormOpen, setIsFormOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [selectedClient, setSelectedClient] = React.useState<Client | null>(null);
+  const [formMode, setFormMode] = React.useState<'add' | 'edit'>('add');
 
-  useEffect(() => {
-    loadClients();
-  }, []);
-
-  const loadClients = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Symulacja API - w rzeczywistej aplikacji tutaj byłby fetch do API
-      const mockClients: Client[] = [
-        {
-          id: '1',
-          name: 'Jan Kowalski',
-          email: 'jan.kowalski@example.com',
-          phone: '+48 123 456 789',
-          address: 'ul. Przykładowa 123',
-          city: 'Warszawa',
-          postalCode: '00-001',
-          createdAt: '2024-01-15T10:30:00Z',
-          updatedAt: '2024-01-15T10:30:00Z',
-        },
-        {
-          id: '2',
-          name: 'Anna Nowak',
-          email: 'anna.nowak@example.com',
-          phone: '+48 987 654 321',
-          address: 'ul. Testowa 456',
-          city: 'Kraków',
-          postalCode: '30-001',
-          createdAt: '2024-01-16T14:20:00Z',
-          updatedAt: '2024-01-16T14:20:00Z',
-        },
-        {
-          id: '3',
-          name: 'Piotr Wiśniewski',
-          email: 'piotr.wisniewski@example.com',
-          phone: '+48 555 123 456',
-          address: 'ul. Demo 789',
-          city: 'Gdańsk',
-          postalCode: '80-001',
-          createdAt: '2024-01-17T09:15:00Z',
-          updatedAt: '2024-01-17T09:15:00Z',
-        },
-      ];
-      
-      setClients(mockClients);
-    } catch (error) {
-      console.error('Error loading clients:', error);
-      setError('Błąd podczas ładowania klientów');
-    } finally {
-      setIsLoading(false);
-    }
+  const { data: clients, loading: isLoading, error, execute: refetchClients } = useApi<Client[]>(getClients);
+  
+  const createClientWrapper = (...args: unknown[]) => {
+    const clientData = args[0] as Omit<Client, 'id'>;
+    return createClient(clientData);
   };
+  
+  const updateClientWrapper = (...args: unknown[]) => {
+    const id = args[0] as string;
+    const clientData = args[1] as Partial<Client>;
+    return updateClient(id, clientData);
+  };
+  
+  const deleteClientWrapper = (...args: unknown[]) => {
+    const id = args[0] as string;
+    return deleteClient(id);
+  };
+  
+  const { execute: executeCreate } = useApi<Client>(createClientWrapper, [], false);
+  const { execute: executeUpdate } = useApi<Client>(updateClientWrapper, [], false);
+  const { execute: executeDelete } = useApi<void>(deleteClientWrapper, [], false);
 
   const handleAddClient = () => {
     setSelectedClient(null);
@@ -85,30 +57,15 @@ export const ClientsPage: React.FC = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleFormSubmit = async (clientData: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleFormSubmit = async (clientData: Omit<Client, 'id'>) => {
     try {
       if (formMode === 'add') {
-        // Symulacja dodawania nowego klienta
-        const newClient: Client = {
-          ...clientData,
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        
-        setClients(prev => [...prev, newClient]);
+        await executeCreate(clientData);
+        refetchClients();
         setIsFormOpen(false);
       } else if (selectedClient) {
-        // Symulacja edycji klienta
-        const updatedClient: Client = {
-          ...selectedClient,
-          ...clientData,
-          updatedAt: new Date().toISOString(),
-        };
-        
-        setClients(prev => prev.map(client =>
-          client.id === selectedClient.id ? updatedClient : client
-        ));
+        await executeUpdate(selectedClient.id, clientData);
+        refetchClients();
         setIsFormOpen(false);
       }
     } catch (error) {
@@ -120,8 +77,8 @@ export const ClientsPage: React.FC = () => {
     if (!selectedClient) return;
     
     try {
-      // Symulacja usuwania klienta
-      setClients(prev => prev.filter(client => client.id !== selectedClient.id));
+      await executeDelete(selectedClient.id);
+      refetchClients();
       setIsDeleteDialogOpen(false);
       setSelectedClient(null);
     } catch (error) {
@@ -129,10 +86,25 @@ export const ClientsPage: React.FC = () => {
     }
   };
 
+  const handleFormClose = () => {
+    setIsFormOpen(false);
+    setSelectedClient(null);
+  };
+
+  const handleDeleteClose = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedClient(null);
+  };
+
   const columns: TableColumn<Client>[] = [
     {
-      key: 'name',
-      label: 'Nazwa',
+      key: 'firstName',
+      label: 'Imię',
+      sortable: true,
+    },
+    {
+      key: 'lastName',
+      label: 'Nazwisko',
       sortable: true,
     },
     {
@@ -144,27 +116,6 @@ export const ClientsPage: React.FC = () => {
       key: 'phone',
       label: 'Telefon',
       sortable: true,
-    },
-    {
-      key: 'city',
-      label: 'Miasto',
-      sortable: true,
-    },
-    {
-      key: 'createdAt',
-      label: 'Data utworzenia',
-      sortable: true,
-      render: (value: string) => new Date(value).toLocaleDateString('pl-PL'),
-    },
-    {
-      key: 'updatedAt',
-      label: 'Ostatnia aktualizacja',
-      sortable: true,
-      render: (value: string) => (
-        <Badge variant="outline">
-          {new Date(value).toLocaleDateString('pl-PL')}
-        </Badge>
-      ),
     },
   ];
 
@@ -194,7 +145,7 @@ export const ClientsPage: React.FC = () => {
       <div className="container mx-auto p-6">
         <Card>
           <CardContent className="flex items-center justify-center h-64">
-            <p className="text-destructive">{error}</p>
+            <p className="text-destructive">Błąd podczas ładowania klientów: {error.message || 'Nieznany błąd'}</p>
           </CardContent>
         </Card>
       </div>
@@ -212,30 +163,28 @@ export const ClientsPage: React.FC = () => {
         </div>
       </div>
 
-      <Card>
+      <Card className="bg-gray-50">
         <CardHeader>
           <CardTitle>Lista klientów</CardTitle>
           <CardDescription>
-            Wszystkie klienci w systemie ({clients.length})
+            Wszystkie klienci w systemie ({clients?.length || 0})
           </CardDescription>
         </CardHeader>
         <CardContent>
           <DataTable
-            data={clients}
+            data={clients || []}
             config={tableConfig}
             onEdit={handleEditClient}
             onDelete={handleDeleteClient}
+            isLoading={isLoading}
+            error={error}
           />
         </CardContent>
       </Card>
 
-      {/* Dialogi */}
       <ClientForm
         isOpen={isFormOpen}
-        onClose={() => {
-          setIsFormOpen(false);
-          setSelectedClient(null);
-        }}
+        onClose={handleFormClose}
         onSubmit={handleFormSubmit}
         client={selectedClient}
         title={formMode === 'add' ? 'Dodaj nowego klienta' : 'Edytuj klienta'}
@@ -243,14 +192,11 @@ export const ClientsPage: React.FC = () => {
 
       <DeleteConfirmDialog
         isOpen={isDeleteDialogOpen}
-        onClose={() => {
-          setIsDeleteDialogOpen(false);
-          setSelectedClient(null);
-        }}
+        onClose={handleDeleteClose}
         onConfirm={handleDeleteConfirm}
         title="Usuń klienta"
         description="Czy na pewno chcesz usunąć tego klienta?"
-        itemName={selectedClient?.name}
+        itemName={selectedClient ? `${selectedClient.firstName} ${selectedClient.lastName}` : undefined}
       />
     </div>
   );

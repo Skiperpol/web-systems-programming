@@ -1,26 +1,38 @@
-// src/features/product/api/productApi.ts
 import { Observable } from 'rxjs';
-import type { ClientType } from '../types/Client';
 import { apiRunner } from '@/lib/utils';
 
-export const getClients = (): Observable<ClientType[]> => {
-  return apiRunner<ClientType[]>('/clients');
+export interface Client {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+}
+
+export const getClients = (): Observable<Client[]> => {
+  return apiRunner<Client[]>('/clients');
 };
 
-export const getClientById = (id: string): Observable<ClientType> => {
-  return apiRunner<ClientType>(`/clients/${id}`);
+export const getClientById = (id: string): Observable<Client> => {
+  return apiRunner<Client>(`/clients/${id}`);
 };
 
-export const createClient = (client: ClientType): Observable<ClientType> => {
-  return apiRunner<ClientType>('/clients', {
+export const createClient = (client: Omit<Client, 'id'>): Observable<Client> => {
+  return apiRunner<Client>('/clients', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(client),
   });
 };
 
-export const updateClient = (id: string, client: ClientType): Observable<ClientType> => {
-  return apiRunner<ClientType>(`/clients/${id}`, {
+export const updateClient = (id: string, client: Partial<Client>): Observable<Client> => {
+  return apiRunner<Client>(`/clients/${id}`, {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(client),
   });
 };

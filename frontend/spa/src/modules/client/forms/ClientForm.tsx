@@ -10,22 +10,12 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
-export interface Client {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  postalCode: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Client } from '../api/clientApi';
 
 export interface ClientFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onSubmit: (client: Omit<Client, 'id'>) => void;
   client?: Client | null;
   title: string;
 }
@@ -37,13 +27,11 @@ export const ClientForm: React.FC<ClientFormProps> = ({
   client,
   title,
 }) => {
-  const [formData, setFormData] = useState<Omit<Client, 'id' | 'createdAt' | 'updatedAt'>>({
-    name: '',
+  const [formData, setFormData] = useState<Omit<Client, 'id'>>({
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
-    address: '',
-    city: '',
-    postalCode: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,28 +39,24 @@ export const ClientForm: React.FC<ClientFormProps> = ({
   useEffect(() => {
     if (client) {
       setFormData({
-        name: client.name,
+        firstName: client.firstName,
+        lastName: client.lastName,
         email: client.email,
         phone: client.phone,
-        address: client.address,
-        city: client.city,
-        postalCode: client.postalCode,
       });
       setErrors({});
     } else {
       setFormData({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         phone: '',
-        address: '',
-        city: '',
-        postalCode: '',
       });
       setErrors({});
     }
   }, [client]);
 
-  const handleInputChange = (field: keyof Omit<Client, 'id' | 'createdAt' | 'updatedAt'>) => (
+  const handleInputChange = (field: keyof Omit<Client, 'id'>) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setFormData(prev => ({
@@ -88,8 +72,12 @@ export const ClientForm: React.FC<ClientFormProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Nazwa jest wymagana';
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'Imię jest wymagane';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Nazwisko jest wymagane';
     }
 
     if (!formData.email.trim()) {
@@ -100,20 +88,6 @@ export const ClientForm: React.FC<ClientFormProps> = ({
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'Telefon jest wymagany';
-    }
-
-    if (!formData.address.trim()) {
-      newErrors.address = 'Adres jest wymagany';
-    }
-
-    if (!formData.city.trim()) {
-      newErrors.city = 'Miasto jest wymagane';
-    }
-
-    if (!formData.postalCode.trim()) {
-      newErrors.postalCode = 'Kod pocztowy jest wymagany';
-    } else if (!/^\d{2}-\d{3}$/.test(formData.postalCode)) {
-      newErrors.postalCode = 'Nieprawidłowy format kodu pocztowego (XX-XXX)';
     }
 
     setErrors(newErrors);
@@ -149,33 +123,47 @@ export const ClientForm: React.FC<ClientFormProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nazwa *</Label>
+                <Label htmlFor="firstName">Imię *</Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={handleInputChange('name')}
-                  placeholder="Nazwa klienta"
-                  className={errors.name ? 'border-destructive' : ''}
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange('firstName')}
+                  placeholder="Imię klienta"
+                  className={errors.firstName ? 'border-destructive' : ''}
                 />
-                {errors.name && (
-                  <p className="text-sm text-destructive">{errors.name}</p>
+                {errors.firstName && (
+                  <p className="text-sm text-destructive">{errors.firstName}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="lastName">Nazwisko *</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange('email')}
-                  placeholder="email@example.com"
-                  className={errors.email ? 'border-destructive' : ''}
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange('lastName')}
+                  placeholder="Nazwisko klienta"
+                  className={errors.lastName ? 'border-destructive' : ''}
                 />
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email}</p>
+                {errors.lastName && (
+                  <p className="text-sm text-destructive">{errors.lastName}</p>
                 )}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange('email')}
+                placeholder="email@example.com"
+                className={errors.email ? 'border-destructive' : ''}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -190,50 +178,6 @@ export const ClientForm: React.FC<ClientFormProps> = ({
               {errors.phone && (
                 <p className="text-sm text-destructive">{errors.phone}</p>
               )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="address">Adres *</Label>
-              <Input
-                id="address"
-                value={formData.address}
-                onChange={handleInputChange('address')}
-                placeholder="ul. Przykładowa 123"
-                className={errors.address ? 'border-destructive' : ''}
-              />
-              {errors.address && (
-                <p className="text-sm text-destructive">{errors.address}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="city">Miasto *</Label>
-                <Input
-                  id="city"
-                  value={formData.city}
-                  onChange={handleInputChange('city')}
-                  placeholder="Warszawa"
-                  className={errors.city ? 'border-destructive' : ''}
-                />
-                {errors.city && (
-                  <p className="text-sm text-destructive">{errors.city}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="postalCode">Kod pocztowy *</Label>
-                <Input
-                  id="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleInputChange('postalCode')}
-                  placeholder="00-000"
-                  className={errors.postalCode ? 'border-destructive' : ''}
-                />
-                {errors.postalCode && (
-                  <p className="text-sm text-destructive">{errors.postalCode}</p>
-                )}
-              </div>
             </div>
 
             <DialogFooter>

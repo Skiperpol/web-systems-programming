@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
   app.enableCors({
-    origin: ['*'],
+    origin: ['http://localhost:5173', 'http://localhost:8000'],
     credentials: true,
   });
   app.useGlobalPipes(
