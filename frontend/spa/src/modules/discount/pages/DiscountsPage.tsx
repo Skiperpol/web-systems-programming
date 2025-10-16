@@ -13,16 +13,13 @@ import {
 } from '@/modules/discount/api/discountApi';
 
 export const DiscountsPage: React.FC = () => {
-  // State for form and dialog management
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedDiscount, setSelectedDiscount] = React.useState<Discount | null>(null);
   const [formMode, setFormMode] = React.useState<'add' | 'edit'>('add');
 
-  // API calls using useApi hook
   const { data: discounts, loading: isLoading, error, execute: refetchDiscounts } = useApi<Discount[]>(getDiscounts);
 
-  // Wrapper functions for useApi compatibility
   const createDiscountWrapper = (...args: unknown[]) => {
     const discountData = args[0] as Omit<Discount, 'id'>;
     return createDiscount(discountData);
@@ -43,7 +40,6 @@ export const DiscountsPage: React.FC = () => {
   const { execute: executeUpdate } = useApi<Discount>(updateDiscountWrapper, [], false);
   const { execute: executeDelete } = useApi<void>(deleteDiscountWrapper, [], false);
 
-  // Handlers for CRUD operations
   const handleAddDiscount = () => {
     setSelectedDiscount(null);
     setFormMode('add');
@@ -190,7 +186,6 @@ export const DiscountsPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Dialogi */}
       <DiscountForm
         isOpen={isFormOpen}
         onClose={handleFormClose}

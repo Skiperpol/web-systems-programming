@@ -13,16 +13,13 @@ import {
 } from '@/modules/warehouse/api/warehouseApi';
 
 export const WarehousesPage: React.FC = () => {
-  // State for form and dialog management
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedWarehouse, setSelectedWarehouse] = React.useState<Warehouse | null>(null);
   const [formMode, setFormMode] = React.useState<'add' | 'edit'>('add');
 
-  // API calls using useApi hook
   const { data: warehouses, loading: isLoading, error, execute: refetchWarehouses } = useApi<Warehouse[]>(getWarehouses);
 
-  // Wrapper functions for useApi compatibility
   const createWarehouseWrapper = (...args: unknown[]) => {
     const warehouseData = args[0] as Omit<Warehouse, 'id'>;
     return createWarehouse(warehouseData);
@@ -43,7 +40,6 @@ export const WarehousesPage: React.FC = () => {
   const { execute: executeUpdate } = useApi<Warehouse>(updateWarehouseWrapper, [], false);
   const { execute: executeDelete } = useApi<void>(deleteWarehouseWrapper, [], false);
 
-  // Handlers for CRUD operations
   const handleAddWarehouse = () => {
     setSelectedWarehouse(null);
     setFormMode('add');
@@ -190,7 +186,6 @@ export const WarehousesPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Dialogi */}
       <WarehouseForm
         isOpen={isFormOpen}
         onClose={handleFormClose}

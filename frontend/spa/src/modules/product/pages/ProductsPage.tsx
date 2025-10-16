@@ -13,16 +13,13 @@ import {
 } from '@/modules/product/api/productApi';
 
 export const ProductsPage: React.FC = () => {
-  // State for form and dialog management
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
   const [formMode, setFormMode] = React.useState<'add' | 'edit'>('add');
 
-  // API calls using useApi hook
   const { data: products, loading: isLoading, error, execute: refetchProducts } = useApi<Product[]>(getProducts);
 
-  // Wrapper functions for useApi compatibility
   const createProductWrapper = (...args: unknown[]) => {
     const productData = args[0] as Omit<Product, 'id'>;
     return createProduct(productData);
@@ -43,7 +40,6 @@ export const ProductsPage: React.FC = () => {
   const { execute: executeUpdate } = useApi<Product>(updateProductWrapper, [], false);
   const { execute: executeDelete } = useApi<void>(deleteProductWrapper, [], false);
 
-  // Handlers for CRUD operations
   const handleAddProduct = () => {
     setSelectedProduct(null);
     setFormMode('add');
@@ -190,7 +186,6 @@ export const ProductsPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Dialogi */}
       <ProductForm
         isOpen={isFormOpen}
         onClose={handleFormClose}
