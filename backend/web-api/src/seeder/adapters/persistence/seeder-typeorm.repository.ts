@@ -29,10 +29,10 @@ export class SeederTypeOrmRepository implements ISeederRepositoryPort {
   ) {}
 
   async clearAllData(): Promise<void> {
-    await this.discountRepository.delete({});
-    await this.productRepository.delete({});
-    await this.warehouseRepository.delete({});
-    await this.clientRepository.delete({});
+    await this.discountRepository.clear();
+    await this.productRepository.clear();
+    await this.warehouseRepository.clear();
+    await this.clientRepository.clear();
   }
 
   async seedClients(): Promise<number> {

@@ -7,7 +7,7 @@ class Discount(models.Model):
     Model representing a discount from external API.
     Maps external API data structure to Django ORM.
     """
-    external_id = models.IntegerField(unique=True, help_text="ID from external API")
+    external_id = models.CharField(max_length=255, unique=True, help_text="ID from external API")
     name = models.CharField(max_length=255, help_text="Discount name")
     percentage = models.DecimalField(max_digits=5, decimal_places=2, help_text="Discount percentage")
     description = models.TextField(blank=True, help_text="Discount description")
