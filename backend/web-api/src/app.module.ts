@@ -13,12 +13,7 @@ import { databaseConfig } from './database/database.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: [
-        join(__dirname, '../../../../.env.local'),
-        join(__dirname, '../../../../.env.development'),
-        join(__dirname, '../../../../.env'),
-        join(__dirname, '../../../../env.example'),
-      ],
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       useFactory: databaseConfig,
