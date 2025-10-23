@@ -1,4 +1,4 @@
-import { ClientModel } from './clients.model';
+import { ClientModel } from './clients.model.js';
 
 describe('ClientModel', () => {
   let client: ClientModel;

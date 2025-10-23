@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ISeederServicePort } from '../domain/ports/i-seeder-service.port';
-import type { ISeederRepositoryPort } from '../domain/ports/i-seeder-repository.port';
-import { SeederResultModel } from '../domain/model/seeder-result.model';
-import { DatabaseStatsModel } from '../domain/model/database-stats.model';
+import { ISeederServicePort } from '../domain/ports/i-seeder-service.port.js';
+import type { ISeederRepositoryPort } from '../domain/ports/i-seeder-repository.port.js';
+import { SeederResultModel } from '../domain/model/seeder-result.model.js';
+import { DatabaseStatsModel } from '../domain/model/database-stats.model.js';
 
 @Injectable()
 export class SeederService implements ISeederServicePort {

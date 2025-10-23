@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../../../app.module';
-import { ISeederServicePort } from '../../domain/ports/i-seeder-service.port';
+import { AppModule } from '../../../app.module.js';
+import { ISeederServicePort } from '../../domain/ports/i-seeder-service.port.js';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);

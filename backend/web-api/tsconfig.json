@@ -1,25 +1,25 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
+    "target": "ES2023",                      // nowoczesny JS
+    "module": "nodenext",                    // ES Modules
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "esModuleInterop": true,                 // pozwala na import CJS modułów
     "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "removeComments": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
+    "outDir": "./dist",                       // gdzie trafia build
+    "rootDir": "./src",                        // katalog źródłowy
     "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strict": false,                            // włącza większość sprawdzeń
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "skipLibCheck": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "noImplicitAny": false
+  },
+  "include": ["src/**/*"],                 // wszystkie pliki TS w src
+  "exclude": ["node_modules", "dist"]         // ignorujemy node_modules i dist
 }

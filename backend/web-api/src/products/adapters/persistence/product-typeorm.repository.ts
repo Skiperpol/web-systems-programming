@@ -1,8 +1,8 @@
 // products/adapters/persistence/product-typeorm.repository.ts
 
-import { IProductRepository } from '../../domain/ports/i-products.repository';
-import { ProductModel } from '../../domain/model/products.model';
-import { ProductTypeOrmEntity } from './product.entity';
+import { IProductRepository } from '../../domain/ports/i-products.repository.js';
+import { ProductModel } from '../../domain/model/products.model.js';
+import { ProductTypeOrmEntity } from './product.entity.js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

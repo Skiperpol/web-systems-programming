@@ -1,5 +1,5 @@
-import { SeederResultModel } from '../model/seeder-result.model';
-import { DatabaseStatsModel } from '../model/database-stats.model';
+import { SeederResultModel } from '../model/seeder-result.model.js';
+import { DatabaseStatsModel } from '../model/database-stats.model.js';
 
 export interface ISeederRepositoryPort {
   clearAllData(): Promise<void>;

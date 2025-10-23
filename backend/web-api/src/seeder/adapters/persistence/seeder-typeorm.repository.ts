@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ISeederRepositoryPort } from '../../domain/ports/i-seeder-repository.port';
-import { SeederResultModel } from '../../domain/model/seeder-result.model';
-import { DatabaseStatsModel } from '../../domain/model/database-stats.model';
-import { ClientTypeOrmEntity } from '../../../clients/adapters/persistence/client.entity';
-import { ProductTypeOrmEntity } from '../../../products/adapters/persistence/product.entity';
-import { WarehouseTypeOrmEntity } from '../../../warehouses/adapters/persistence/warehouse.entity';
-import { DiscountTypeOrmEntity } from '../../../discounts/adapters/persistence/discount.entity';
+import { ISeederRepositoryPort } from '../../domain/ports/i-seeder-repository.port.js';
+import { SeederResultModel } from '../../domain/model/seeder-result.model.js';
+import { DatabaseStatsModel } from '../../domain/model/database-stats.model.js';
+import { ClientTypeOrmEntity } from '../../../clients/adapters/persistence/client.entity.js';
+import { ProductTypeOrmEntity } from '../../../products/adapters/persistence/product.entity.js';
+import { WarehouseTypeOrmEntity } from '../../../warehouses/adapters/persistence/warehouse.entity.js';
+import { DiscountTypeOrmEntity } from '../../../discounts/adapters/persistence/discount.entity.js';
 import {
   CLIENTS_MOCK_DATA,
   PRODUCTS_MOCK_DATA,
   WAREHOUSES_MOCK_DATA,
   DISCOUNTS_MOCK_DATA,
-} from '../../data/mocks';
+} from '../../data/mocks/index.js';
 
 @Injectable()
 export class SeederTypeOrmRepository implements ISeederRepositoryPort {

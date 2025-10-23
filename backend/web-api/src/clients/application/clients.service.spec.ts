@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { ClientService } from './clients.service';
-import { IClientRepository } from '../domain/ports/i-clients.repository';
-import { ClientModel } from '../domain/model/clients.model';
+import { ClientService } from './clients.service.js';
+import { IClientRepository } from '../domain/ports/i-clients.repository.js';
+import { ClientModel } from '../domain/model/clients.model.js';
 
 describe('ClientService', () => {
   let service: ClientService;

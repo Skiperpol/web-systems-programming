@@ -1,4 +1,4 @@
-import { ProductModel } from '../model/products.model';
+import { ProductModel } from '../model/products.model.js';
 
 export abstract class IProductRepository {
   abstract save(product: ProductModel): Promise<ProductModel>;

@@ -1,4 +1,4 @@
-import { DiscountModel } from '../model/discounts.model';
+import { DiscountModel } from '../model/discounts.model.js';
 
 export abstract class IDiscountRepository {
   abstract save(discount: DiscountModel): Promise<DiscountModel>;

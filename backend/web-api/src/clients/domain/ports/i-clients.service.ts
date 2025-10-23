@@ -1,5 +1,5 @@
-import { ClientModel } from '../model/clients.model';
-import { ClientCreateData } from '../types/client-create-data.interface';
+import { ClientModel } from '../model/clients.model.js';
+import { ClientCreateData } from '../types/client-create-data.interface.js';
 
 export interface ClientUpdateData {
   firstName?: string;

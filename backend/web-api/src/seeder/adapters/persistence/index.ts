@@ -1,1 +1,1 @@
-export * from './seeder-typeorm.repository';
+export * from './seeder-typeorm.repository.js';

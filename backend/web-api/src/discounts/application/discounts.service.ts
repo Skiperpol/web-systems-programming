@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DiscountModel } from '../domain/model/discounts.model';
-import { IDiscountRepository } from '../domain/ports/i-discounts.repository';
-import { IDiscountService, DiscountUpdateData } from '../domain/ports/i-discounts.service';
+import { DiscountModel } from '../domain/model/discounts.model.js';
+import { IDiscountRepository } from '../domain/ports/i-discounts.repository.js';
+import {
+  IDiscountService,
+  DiscountUpdateData,
+} from '../domain/ports/i-discounts.service.js';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
-import { DiscountCreateData } from '../domain/types/discount-create-data.interface';
+import { DiscountCreateData } from '../domain/types/discount-create-data.interface.js';
 
 @Injectable()
 export class DiscountService implements IDiscountService {

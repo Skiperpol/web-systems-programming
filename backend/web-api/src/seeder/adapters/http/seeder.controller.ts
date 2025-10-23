@@ -7,7 +7,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import type { ISeederServicePort } from '../../domain/ports/i-seeder-service.port';
+import type { ISeederServicePort } from '../../domain/ports/i-seeder-service.port.js';
 
 @ApiTags('Seeder')
 @Controller('seeder')

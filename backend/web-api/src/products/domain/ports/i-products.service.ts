@@ -1,5 +1,5 @@
-import { ProductModel } from '../model/products.model';
-import { ProductCreateData } from '../types/product-create-data.interface';
+import { ProductModel } from '../model/products.model.js';
+import { ProductCreateData } from '../types/product-create-data.interface.js';
 
 export interface ProductUpdateData {
   name?: string;

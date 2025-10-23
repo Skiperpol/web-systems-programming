@@ -1,4 +1,11 @@
-import { IsString, IsNumber, IsOptional, Min, Max, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  Min,
+  Max,
+  IsDateString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateDiscountDto {

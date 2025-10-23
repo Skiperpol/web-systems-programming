@@ -1,4 +1,4 @@
-import { ClientModel } from '../model/clients.model';
+import { ClientModel } from '../model/clients.model.js';
 
 export abstract class IClientRepository {
   abstract save(client: ClientModel): Promise<ClientModel>;

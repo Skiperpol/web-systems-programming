@@ -1,5 +1,5 @@
-import { DiscountModel } from '../model/discounts.model';
-import { DiscountCreateData } from '../types/discount-create-data.interface';
+import { DiscountModel } from '../model/discounts.model.js';
+import { DiscountCreateData } from '../types/discount-create-data.interface.js';
 
 export interface DiscountUpdateData {
   name?: string;

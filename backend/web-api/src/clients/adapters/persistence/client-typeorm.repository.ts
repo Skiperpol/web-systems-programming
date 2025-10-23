@@ -1,8 +1,8 @@
 // clients/adapters/persistence/client-typeorm.repository.ts
 
-import { IClientRepository } from '../../domain/ports/i-clients.repository';
-import { ClientModel } from '../../domain/model/clients.model';
-import { ClientTypeOrmEntity } from './client.entity';
+import { IClientRepository } from '../../domain/ports/i-clients.repository.js';
+import { ClientModel } from '../../domain/model/clients.model.js';
+import { ClientTypeOrmEntity } from './client.entity.js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

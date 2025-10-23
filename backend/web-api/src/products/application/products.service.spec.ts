@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { ProductService } from './products.service';
-import { IProductRepository } from '../domain/ports/i-products.repository';
-import { ProductModel } from '../domain/model/products.model';
+import { ProductService } from './products.service.js';
+import { IProductRepository } from '../domain/ports/i-products.repository.js';
+import { ProductModel } from '../domain/model/products.model.js';
 
 describe('ProductService', () => {
   let service: ProductService;

@@ -1,1 +1,1 @@
-export * from './seeder-cli';
+export * from './seeder-cli.js';

@@ -16,10 +16,10 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { CreateClientDto } from './dtos/create-client.dto';
-import { UpdateClientDto } from './dtos/update-client.dto';
-import { ClientResponseDto } from './dtos/client-response.dto';
-import { IClientService } from '../../domain/ports/i-clients.service';
+import { CreateClientDto } from './dtos/create-client.dto.js';
+import { UpdateClientDto } from './dtos/update-client.dto.js';
+import { ClientResponseDto } from './dtos/client-response.dto.js';
+import { IClientService } from '../../domain/ports/i-clients.service.js';
 
 @ApiTags('clients')
 @Controller('clients')

@@ -14,8 +14,7 @@ export const DISCOUNTS_MOCK_DATA: DiscountMockData[] = [
     id: uuidv4(),
     name: 'Black Friday 2024',
     percentage: 30,
-    description:
-      'Największa wyprzedaż roku - 30% zniżki na wszystkie produkty',
+    description: 'Największa wyprzedaż roku - 30% zniżki na wszystkie produkty',
     validFrom: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 dni temu
     validTo: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 dni od teraz
   },

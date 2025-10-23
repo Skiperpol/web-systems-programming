@@ -16,10 +16,10 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { CreateWarehouseDto } from './dtos/create-warehouse.dto';
-import { UpdateWarehouseDto } from './dtos/update-warehouse.dto';
-import { WarehouseResponseDto } from './dtos/warehouse-response.dto';
-import { IWarehouseService } from '../../domain/ports/i-warehouses.service';
+import { CreateWarehouseDto } from './dtos/create-warehouse.dto.js';
+import { UpdateWarehouseDto } from './dtos/update-warehouse.dto.js';
+import { WarehouseResponseDto } from './dtos/warehouse-response.dto.js';
+import { IWarehouseService } from '../../domain/ports/i-warehouses.service.js';
 
 @ApiTags('warehouses')
 @Controller('warehouses')
@@ -92,7 +92,10 @@ export class WarehouseController {
     @Param('id') id: string,
     @Body() updateWarehouseDto: UpdateWarehouseDto,
   ): Promise<WarehouseResponseDto> {
-    const updatedModel = await this.warehouseService.update(id, updateWarehouseDto);
+    const updatedModel = await this.warehouseService.update(
+      id,
+      updateWarehouseDto,
+    );
 
     const responseDto = new WarehouseResponseDto();
     Object.assign(responseDto, updatedModel);

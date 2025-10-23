@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { DiscountService } from './discounts.service';
-import { IDiscountRepository } from '../domain/ports/i-discounts.repository';
-import { DiscountModel } from '../domain/model/discounts.model';
+import { DiscountService } from './discounts.service.js';
+import { IDiscountRepository } from '../domain/ports/i-discounts.repository.js';
+import { DiscountModel } from '../domain/model/discounts.model.js';
 
 describe('DiscountService', () => {
   let service: DiscountService;

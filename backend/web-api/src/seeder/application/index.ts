@@ -1,1 +1,1 @@
-export * from './seeder.service';
+export * from './seeder.service.js';

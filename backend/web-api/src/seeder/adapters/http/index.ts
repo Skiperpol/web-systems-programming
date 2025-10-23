@@ -1,1 +1,1 @@
-export * from './seeder.controller';
+export * from './seeder.controller.js';

@@ -1,8 +1,8 @@
 // discounts/adapters/persistence/discount-typeorm.repository.ts
 
-import { IDiscountRepository } from '../../domain/ports/i-discounts.repository';
-import { DiscountModel } from '../../domain/model/discounts.model';
-import { DiscountTypeOrmEntity } from './discount.entity';
+import { IDiscountRepository } from '../../domain/ports/i-discounts.repository.js';
+import { DiscountModel } from '../../domain/model/discounts.model.js';
+import { DiscountTypeOrmEntity } from './discount.entity.js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

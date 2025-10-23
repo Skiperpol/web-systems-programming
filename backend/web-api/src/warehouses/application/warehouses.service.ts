@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { WarehouseModel } from '../domain/model/warehouses.model';
-import { IWarehouseRepository } from '../domain/ports/i-warehouses.repository';
-import { IWarehouseService, WarehouseUpdateData } from '../domain/ports/i-warehouses.service';
+import { WarehouseModel } from '../domain/model/warehouses.model.js';
+import { IWarehouseRepository } from '../domain/ports/i-warehouses.repository.js';
+import {
+  IWarehouseService,
+  WarehouseUpdateData,
+} from '../domain/ports/i-warehouses.service.js';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
-import { WarehouseCreateData } from '../domain/types/warehouse-create-data.interface';
+import { WarehouseCreateData } from '../domain/types/warehouse-create-data.interface.js';
 
 @Injectable()
 export class WarehouseService implements IWarehouseService {

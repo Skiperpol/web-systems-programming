@@ -16,10 +16,10 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { CreateDiscountDto } from './dtos/create-discount.dto';
-import { UpdateDiscountDto } from './dtos/update-discount.dto';
-import { DiscountResponseDto } from './dtos/discount-response.dto';
-import { IDiscountService } from '../../domain/ports/i-discounts.service';
+import { CreateDiscountDto } from './dtos/create-discount.dto.js';
+import { UpdateDiscountDto } from './dtos/update-discount.dto.js';
+import { DiscountResponseDto } from './dtos/discount-response.dto.js';
+import { IDiscountService } from '../../domain/ports/i-discounts.service.js';
 
 @ApiTags('discounts')
 @Controller('discounts')
@@ -99,8 +99,12 @@ export class DiscountController {
   ): Promise<DiscountResponseDto> {
     const updateData = {
       ...updateDiscountDto,
-      validFrom: updateDiscountDto.validFrom ? new Date(updateDiscountDto.validFrom) : undefined,
-      validTo: updateDiscountDto.validTo ? new Date(updateDiscountDto.validTo) : undefined,
+      validFrom: updateDiscountDto.validFrom
+        ? new Date(updateDiscountDto.validFrom)
+        : undefined,
+      validTo: updateDiscountDto.validTo
+        ? new Date(updateDiscountDto.validTo)
+        : undefined,
     };
 
     const updatedModel = await this.discountService.update(id, updateData);

@@ -1,4 +1,4 @@
-import { DiscountModel } from './discounts.model';
+import { DiscountModel } from './discounts.model.js';
 
 describe('DiscountModel', () => {
   let discount: DiscountModel;

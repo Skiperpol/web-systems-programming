@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { WarehouseService } from './warehouses.service';
-import { IWarehouseRepository } from '../domain/ports/i-warehouses.repository';
-import { WarehouseModel } from '../domain/model/warehouses.model';
-import { WarehouseCreateData } from '../domain/types/warehouse-create-data.interface';
+import { WarehouseService } from './warehouses.service.js';
+import { IWarehouseRepository } from '../domain/ports/i-warehouses.repository.js';
+import { WarehouseModel } from '../domain/model/warehouses.model.js';
+import { WarehouseCreateData } from '../domain/types/warehouse-create-data.interface.js';
 
 describe('WarehouseService', () => {
   let service: WarehouseService;

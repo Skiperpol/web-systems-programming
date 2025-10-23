@@ -1,8 +1,8 @@
 // warehouses/adapters/persistence/warehouse-typeorm.repository.ts
 
-import { IWarehouseRepository } from '../../domain/ports/i-warehouses.repository';
-import { WarehouseModel } from '../../domain/model/warehouses.model';
-import { WarehouseTypeOrmEntity } from './warehouse.entity';
+import { IWarehouseRepository } from '../../domain/ports/i-warehouses.repository.js';
+import { WarehouseModel } from '../../domain/model/warehouses.model.js';
+import { WarehouseTypeOrmEntity } from './warehouse.entity.js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

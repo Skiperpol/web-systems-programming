@@ -1,4 +1,4 @@
-import { WarehouseModel } from './warehouses.model';
+import { WarehouseModel } from './warehouses.model.js';
 
 describe('WarehouseModel', () => {
   let warehouse: WarehouseModel;

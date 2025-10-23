@@ -1,4 +1,4 @@
-import { WarehouseModel } from '../model/warehouses.model';
+import { WarehouseModel } from '../model/warehouses.model.js';
 
 export abstract class IWarehouseRepository {
   abstract save(warehouse: WarehouseModel): Promise<WarehouseModel>;

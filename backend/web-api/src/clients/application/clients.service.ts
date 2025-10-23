@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ClientModel } from '../domain/model/clients.model';
-import { IClientRepository } from '../domain/ports/i-clients.repository';
+import { ClientModel } from '../domain/model/clients.model.js';
+import { IClientRepository } from '../domain/ports/i-clients.repository.js';
 import {
   IClientService,
   ClientUpdateData,
-} from '../domain/ports/i-clients.service';
+} from '../domain/ports/i-clients.service.js';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
 

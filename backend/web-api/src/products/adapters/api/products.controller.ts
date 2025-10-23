@@ -16,10 +16,10 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { CreateProductDto } from './dtos/create-product.dto';
-import { UpdateProductDto } from './dtos/update-product.dto';
-import { ProductResponseDto } from './dtos/product-response.dto';
-import { IProductService } from '../../domain/ports/i-products.service';
+import { CreateProductDto } from './dtos/create-product.dto.js';
+import { UpdateProductDto } from './dtos/update-product.dto.js';
+import { ProductResponseDto } from './dtos/product-response.dto.js';
+import { IProductService } from '../../domain/ports/i-products.service.js';
 
 @ApiTags('products')
 @Controller('products')

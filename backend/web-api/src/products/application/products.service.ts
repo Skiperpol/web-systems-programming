@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductModel } from '../domain/model/products.model';
-import { IProductRepository } from '../domain/ports/i-products.repository';
-import { IProductService, ProductUpdateData } from '../domain/ports/i-products.service';
+import { ProductModel } from '../domain/model/products.model.js';
+import { IProductRepository } from '../domain/ports/i-products.repository.js';
+import {
+  IProductService,
+  ProductUpdateData,
+} from '../domain/ports/i-products.service.js';
 import { v4 as uuid } from 'uuid';
 import { Inject } from '@nestjs/common';
-import { ProductCreateData } from '../domain/types/product-create-data.interface';
+import { ProductCreateData } from '../domain/types/product-create-data.interface.js';
 
 @Injectable()
 export class ProductService implements IProductService {
